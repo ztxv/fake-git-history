@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { Button } from "./components/ui/button";
 import { Slider } from "./components/ui/slider";
+import { HistoryPresetCarousel } from "./components/history-preset-carousel";
 import "./style.css";
 import { PublishInstructions } from "./components/publish-instructions";
 const key = d => d.toISOString().slice(0, 10);
@@ -269,6 +270,17 @@ function App() {
       setError("Could not copy. Select the path below to copy it manually.");
     }
   }
+  function applyPreset(preset) {
+    setPreviewing(true);
+    setSettings({
+      startDate: key(new Date(+today - (preset.durationDays - 1) * 86400000)),
+      endDate: key(today),
+      commitsPerDay: preset.commitsPerDay,
+      frequency: preset.frequency,
+      distribution: preset.distribution,
+      seed: crypto.randomUUID()
+    });
+  }
   return (
     <>
       <header>
@@ -286,6 +298,7 @@ function App() {
             <i /> Running on your machine
           </span>
           <a
+            className="source-code-link"
             href="https://github.com/ztxv/fake-git-history"
             target="_blank"
             rel="noreferrer"
@@ -306,6 +319,16 @@ function App() {
             <Monitor size={15} /> Local workspace
           </span>
         </div>
+        <section className="preset-section" aria-labelledby="preset-heading">
+          <div className="preset-heading">
+            <div>
+              <span className="eyebrow green">QUICK START</span>
+              <h2 id="preset-heading">Start with a rhythm</h2>
+              <p>Pick a recipe, then make every detail yours.</p>
+            </div>
+          </div>
+          <HistoryPresetCarousel onApply={applyPreset} />
+        </section>
         <div className="workspace">
           <aside className="panel controls">
             <div className="panel-heading">
