@@ -14,8 +14,9 @@ The app runs on your computer. No account, database, or API keys are needed to p
 
 [Quick start](#quick-start) · [Usage](#usage) · [Publishing](#publishing) · [Development](#development) · [Contributing](#contributing) · [License](#license)
 
-<!-- Add your screenshots here once ready. Use repository-relative image paths. -->
-
+<p align="center">
+  <img src="screenshots/main.png" alt="CommitForge" width="900">
+</p>
 ## Features
 
 - **Live contribution preview** with total commits, active days, and peak daily activity.
