@@ -144,6 +144,10 @@ test("HTTP preview to generation flow, validation, and cross-origin protection",
     req.on("error", reject);
   });
   assert.equal(badHost, 403);
+  const config = await (await fetch(base + "/api/config")).json();
+  assert.equal(config.name, undefined);
+  assert.equal(config.email, undefined);
+  assert.equal(typeof config.gitAvailable, "boolean");
   assert.equal(
     (await post("/api/preview", { ...options, startDate: "invalid" })).status,
     400

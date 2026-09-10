@@ -33,13 +33,6 @@ function createServer({ root = path.resolve(__dirname, "../generated") } = {}) {
     try {
       const url = new URL(req.url, `http://${expected}`);
       if (req.method === "GET" && url.pathname === "/api/config") {
-        const read = async key => {
-          try {
-            return (await git(["config", "--get", key])).stdout.trim();
-          } catch {
-            return "";
-          }
-        };
         let available = true;
         try {
           await git(["--version"]);
@@ -47,8 +40,6 @@ function createServer({ root = path.resolve(__dirname, "../generated") } = {}) {
           available = false;
         }
         return send(200, {
-          name: await read("user.name"),
-          email: await read("user.email"),
           gitAvailable: available,
           outputRoot: root
         });

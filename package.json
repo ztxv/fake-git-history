@@ -19,7 +19,7 @@
     "lint": "prettier --write 'src/**/*.js'",
     "start:server": "node src/server.js",
     "cli": "node src/cli.js",
-    "dev": "vite",
+    "dev": "node src/dev.js",
     "build": "vite build",
     "test": "node --test"
   },

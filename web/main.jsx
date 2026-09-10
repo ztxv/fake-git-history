@@ -59,11 +59,16 @@ async function api(url, body) {
     body === undefined
       ? {}
       : {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body)
-        }
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      }
   );
+  const contentType = response.headers.get("content-type") || "";
+  if (!contentType.includes("application/json"))
+    throw new Error(
+      "The local API server is unavailable. Stop this process and run npm run dev again."
+    );
   const data = await response.json();
   if (!response.ok) throw new Error(data.error || "Request failed.");
   return data;
@@ -116,9 +121,8 @@ function Heatmap({ preview }) {
                   day ? `${day.date}: ${day.count} commits` : undefined
                 }
                 title={day ? `${day.date} · ${day.count} commits` : undefined}
-                className={`cell level-${
-                  day?.count ? Math.ceil((day.count / preview.peak) * 4) : 0
-                } ${day ? "" : "blank"}`}
+                className={`cell level-${day?.count ? Math.ceil((day.count / preview.peak) * 4) : 0
+                  } ${day ? "" : "blank"}`}
               />
             ))}
           </div>
@@ -170,19 +174,19 @@ function App() {
               const p = previewRef.current;
               return p
                 ? {
-                    startDate: p.startDate,
-                    endDate: p.endDate,
-                    total: p.total,
-                    activeDays: p.activeDays,
-                    peak: p.peak
-                  }
+                  startDate: p.startDate,
+                  endDate: p.endDate,
+                  total: p.total,
+                  activeDays: p.activeDays,
+                  peak: p.peak
+                }
                 : { status: "unavailable" };
             }
           },
           { signal: lifecycle.signal }
         )
-      ).catch(() => {});
-    } catch {}
+      ).catch(() => { });
+    } catch { }
     return () => lifecycle.abort();
   }, []);
   const busy = submitting || job?.status === "running";
@@ -192,10 +196,7 @@ function App() {
   };
   useEffect(() => {
     api("/api/config")
-      .then(data => {
-        setConfig(data);
-        setIdentity(s => ({ ...s, name: data.name, email: data.email }));
-      })
+      .then(setConfig)
       .catch(e => setError(e.message));
   }, []);
   useEffect(() => {
@@ -276,7 +277,7 @@ function App() {
             <GitBranch size={21} />
           </span>
           <span>
-            history<span className="muted">studio</span>
+            git<span className="muted">larp</span>
           </span>
           <span className="version">LOCAL</span>
         </div>
@@ -285,10 +286,10 @@ function App() {
             <i /> Running on your machine
           </span>
           <a
-            href="https://github.com/artiebits/fake-git-history"
+            href="https://github.com/ztxv/fake-git-history"
             target="_blank"
             rel="noreferrer"
-            aria-label="Original project on GitHub"
+            aria-label="Project repository on GitHub"
           >
             <CodeXml size={19} />
           </a>
@@ -379,9 +380,8 @@ function App() {
                   {patterns.map(pattern => (
                     <button
                       key={pattern.id}
-                      className={`pattern ${
-                        settings.distribution === pattern.id ? "selected" : ""
-                      }`}
+                      className={`pattern ${settings.distribution === pattern.id ? "selected" : ""
+                        }`}
                       aria-pressed={settings.distribution === pattern.id}
                       onClick={() => update("distribution", pattern.id)}
                     >
@@ -578,7 +578,9 @@ function App() {
                     </label>
                   </div>
                   <p className="hint">
-                    Use an email connected to your GitHub or GitLab account.
+                    Enter the name and email you want attached to these commits.
+                    Use an email connected to your GitHub or GitLab account so
+                    the contributions can be attributed to you.
                   </p>
                   <label className="folder-label">
                     Repository folder
@@ -640,10 +642,10 @@ function App() {
                     {job.status === "running"
                       ? "Writing your history"
                       : job.status === "complete"
-                      ? "Your repository is ready"
-                      : job.status === "cancelled"
-                      ? "Generation cancelled"
-                      : "Generation failed"}
+                        ? "Your repository is ready"
+                        : job.status === "cancelled"
+                          ? "Generation cancelled"
+                          : "Generation failed"}
                   </strong>
                   {job.status === "running" ? (
                     <Button
@@ -702,7 +704,7 @@ function App() {
         </div>
         <footer>
           <span>
-            <GitBranch size={14} /> Fake Git History · History Studio
+            <GitBranch size={14} /> Fake Git History · Git Larp
           </span>
           <span>Preview → Generate → Make it yours</span>
         </footer>

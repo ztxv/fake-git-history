@@ -11,6 +11,7 @@
 <p align="center">
   <img src="screenshots/main.png" alt="CommitForge" width="900">
 </p>
+<<<<<<< HEAD
 
 Git Larp is a local web interface for Fake Git History. Configure dates, activity patterns, and commit counts, inspect the contribution heatmap, then generate a repository from that exact preview. A terminal CLI is included for scripted use.
 
@@ -18,6 +19,8 @@ The app runs on your computer. No account, database, or API keys are needed to p
 
 [Quick start](#quick-start) · [Usage](#usage) · [Publishing](#publishing) · [Development](#development) · [Contributing](#contributing) · [License](#license)
 
+=======
+>>>>>>> cde2ff2 (Improve development setup and author identity form)
 
 ## Features
 
@@ -116,7 +119,8 @@ Each result is an independent Git repository with:
 
 - A `main` branch.
 - Empty commits with the message `Generated history`.
-- Author and committer identity set from your inputs.
+- Required author and committer name/email fields that start blank and are set
+  only from your inputs.
 - Both author and committer timestamps set to the stored preview dates, in chronological order.
 
 An empty working directory is expected: the generated history lives in `.git`. The generator does not add sample files or copy this application's source into the result. Generated repositories are ignored by this project's `.gitignore`.
@@ -201,21 +205,16 @@ The server serves the built frontend and a local JSON API. It checks Host/Origin
 
 The frontend uses **React, Vite, Tailwind CSS, Radix primitives, and Lucide icons**. The backend uses **Node.js's built-in HTTP server** and invokes the installed Git executable. Backend modules use CommonJS; frontend modules use ES modules.
 
-After installing dependencies, run two terminals from the project root:
-
-**Terminal 1 — API server**
-
-```sh
-npm run start:server
-```
-
-**Terminal 2 — frontend with hot reload**
+After installing dependencies, start the API and frontend development servers
+together from the project root:
 
 ```sh
 npm run dev
 ```
 
-Open **http://127.0.0.1:5173**. Vite proxies `/api` to port `3000`; keep the API server on that port for development. Port `5173` is fixed and must be available. Restart the API server after backend edits.
+Open **http://127.0.0.1:5173**. The command starts the local API on port
+`3000` and Vite on port `5173`; both ports must be available. Restart the command
+after backend edits.
 
 A frontend build is not required when using Vite. To serve the production interface directly from the API server, run `npm run build` first, or use `npm start`.
 
@@ -226,7 +225,7 @@ A frontend build is not required when using Vite. To serve the production interf
 | `npm start`                | Build the frontend, then start the local server.                                      |
 | `npm run build`            | Produce the frontend bundle in `dist/`.                                               |
 | `npm run start:server`     | Start the API and serve any existing `dist/` build.                                   |
-| `npm run dev`              | Start the Vite development server on port 5173.                                       |
+| `npm run dev`              | Start the API on port 3000 and Vite on port 5173.                                     |
 | `npm run cli -- [options]` | Run the terminal interface.                                                           |
 | `npm test`                 | Run Node's built-in test suite.                                                       |
 | `npm run lint`             | Run Prettier **with writes** on `src/**/*.js`; this is not a full-project lint check. |
@@ -276,7 +275,7 @@ The full suite currently requires `/bin/sh`, and one test uses filenames that ar
 | The port is busy                        | Stop the process using it or choose another production port with `PORT`.                        |
 | The page reports missing frontend files | Run `npm start`, or run `npm run build` before `npm run start:server`.                          |
 | Frontend changes are not visible        | Use Vite during development, or rebuild and refresh the production page.                        |
-| Vite loads but API requests fail        | Confirm the backend is running on port 3000 and that `PORT` is not set to another value.        |
+| Vite loads but API requests fail        | Stop the process, confirm ports 3000 and 5173 are free, then run `npm run dev` again.            |
 | The destination folder already exists   | Choose a different folder name; existing folders are preserved.                                 |
 | The preview expired                     | Reshuffle or change a setting to request a fresh preview, then review it before generating.     |
 | Generate is disabled                    | Wait for the preview, check that Git is available, and ensure the plan has at least one commit. |
