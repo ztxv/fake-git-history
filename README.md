@@ -1,9 +1,10 @@
 # History Studio
 
-![Version](https://img.shields.io/badge/version-1.0.0-brightgreen?style=for-the-badge)
-![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)
-![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-lightgrey?style=for-the-badge)
-![Git](https://img.shields.io/badge/Git-Required-F05032?style=for-the-badge&logo=git&logoColor=white)
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-green.svg)
+![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)
+![Git](https://img.shields.io/badge/git-required-orange.svg)
+![Local First](https://img.shields.io/badge/local--first-no%20OAuth-success.svg)
 
 **Design Git activity visually. Generate a real repository locally.**
 
