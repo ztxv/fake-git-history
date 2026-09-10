@@ -1,4 +1,4 @@
-# History Studio
+# Git Larp
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-green.svg)
@@ -12,7 +12,7 @@
   <img src="screenshots/main.png" alt="CommitForge" width="900">
 </p>
 
-History Studio is a local web interface for Fake Git History. Configure dates, activity patterns, and commit counts, inspect the contribution heatmap, then generate a repository from that exact preview. A terminal CLI is included for scripted use.
+Git Larp is a local web interface for Fake Git History. Configure dates, activity patterns, and commit counts, inspect the contribution heatmap, then generate a repository from that exact preview. A terminal CLI is included for scripted use.
 
 The app runs on your computer. No account, database, or API keys are needed to preview or generate history. Publishing is an optional step you run in your own terminal.
 
