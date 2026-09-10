@@ -1,5 +1,9 @@
 # History Studio
 
+![Version](https://img.shields.io/badge/version-1.4.0-blue.svg)
+![Docker](https://img.shields.io/badge/docker-compatible-green.svg)
+![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)
+
 **Design Git activity visually. Generate a real repository locally.**
 
 History Studio is a local web interface for Fake Git History. Configure dates, activity patterns, and commit counts, inspect the contribution heatmap, then generate a repository from that exact preview. A terminal CLI is included for scripted use.
