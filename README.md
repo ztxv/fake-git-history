@@ -11,16 +11,11 @@
 <p align="center">
   <img src="screenshots/main.png" alt="CommitForge" width="900">
 </p>
-<<<<<<< HEAD
-
 Git Larp is a local web interface for Fake Git History. Configure dates, activity patterns, and commit counts, inspect the contribution heatmap, then generate a repository from that exact preview. A terminal CLI is included for scripted use.
 
 The app runs on your computer. No account, database, or API keys are needed to preview or generate history. Publishing is an optional step you run in your own terminal.
 
 [Quick start](#quick-start) · [Usage](#usage) · [Publishing](#publishing) · [Development](#development) · [Contributing](#contributing) · [License](#license)
-
-=======
->>>>>>> cde2ff2 (Improve development setup and author identity form)
 
 ## Features
 
