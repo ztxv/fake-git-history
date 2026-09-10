@@ -293,7 +293,7 @@ Commit lockfile changes when adding dependencies. Keep generated repositories, b
 
 ## Credits
 
-Built on [artiebits/fake-git-history](https://github.com/artiebits/fake-git-history), originally created by Artur Khusaenov. The web interface uses local shadcn-style components composed from Radix primitives and Tailwind CSS.
+Built on [artiebits/fake-git-history](https://github.com/artiebits/fake-git-history), originally created by Artur Khusaenov. Pretty cool guy and he has a ton of projects that are neat, he is also an ex Meta and current bookings.com software dev which is pretty cool. The web interface uses local shadcn-style components composed from Radix primitives and Tailwind CSS. AI was used in some parts of making this project.
 
 ## License
 
