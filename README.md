@@ -8,15 +8,17 @@
 
 **Design Git activity visually. Generate a real repository locally.**
 
+<p align="center">
+  <img src="screenshots/main.png" alt="CommitForge" width="900">
+</p>
+
 History Studio is a local web interface for Fake Git History. Configure dates, activity patterns, and commit counts, inspect the contribution heatmap, then generate a repository from that exact preview. A terminal CLI is included for scripted use.
 
 The app runs on your computer. No account, database, or API keys are needed to preview or generate history. Publishing is an optional step you run in your own terminal.
 
 [Quick start](#quick-start) · [Usage](#usage) · [Publishing](#publishing) · [Development](#development) · [Contributing](#contributing) · [License](#license)
 
-<p align="center">
-  <img src="screenshots/main.png" alt="CommitForge" width="900">
-</p>
+
 ## Features
 
 - **Live contribution preview** with total commits, active days, and peak daily activity.
