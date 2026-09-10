@@ -1,6 +1,6 @@
 # Git Larp
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.5.5-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-green.svg)
 ![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)
 ![Git](https://img.shields.io/badge/git-required-orange.svg)
