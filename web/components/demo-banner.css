@@ -1,0 +1,45 @@
+/* Hosted-demo only (rendered when built with `npm run build:demo`). */
+.demo-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  padding: 9px 20px;
+  font-size: 12px;
+  line-height: 18px;
+  color: #97a39b;
+  background: #111814;
+  border-bottom: 1px solid #252c28;
+}
+.demo-banner-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.65px;
+  color: #a5edb5;
+}
+.demo-banner-label i {
+  width: 6px;
+  height: 6px;
+  background: #a5edb5;
+  border-radius: 50%;
+}
+.demo-banner a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  color: #a5edb5;
+}
+.demo-banner a:hover {
+  text-decoration: underline;
+}
+.job-panel p.demo-note {
+  margin-top: 14px;
+  line-height: 1.5;
+  color: #8f9b93;
+}
