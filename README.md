@@ -1,300 +1,215 @@
-# Git Larp
+<div align="center">
 
-![Version](https://img.shields.io/badge/version-1.5.5-blue.svg)
-![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-green.svg)
-![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)
-![Git](https://img.shields.io/badge/git-required-orange.svg)
-![Local First](https://img.shields.io/badge/local--first-no%20OAuth-success.svg)
+<img src="demo-site/assets/git-larp.svg" width="72" height="72" alt="Git Larp logo">
+
+# Git Larp
 
 **Design Git activity visually. Generate a real repository locally.**
 
-<p align="center">
-  <img src="screenshots/main.png" alt="CommitForge" width="900">
-</p>
-Git Larp is a local web interface for Fake Git History. Configure dates, activity patterns, and commit counts, inspect the contribution heatmap, then generate a repository from that exact preview. A terminal CLI is included for scripted use.
+Fake Git History turns dates and activity settings into a contribution calendar. Try a 90-day Work hours plan, then switch to After hours to give weekends more weight. The local app can write every planned timestamp to a new Git repository.
 
-The app runs on your computer. No account, database, or API keys are needed to preview or generate history. Publishing is an optional step you run in your own terminal.
+[![Check project](https://github.com/ztxv/fake-git-history/actions/workflows/check.yml/badge.svg)](https://github.com/ztxv/fake-git-history/actions/workflows/check.yml)
+![Node.js 22.12+](https://img.shields.io/badge/Node.js-22.12%2B-339933?logo=node.js&logoColor=white)
+![Git required locally](https://img.shields.io/badge/Git-required%20locally-F05032?logo=git&logoColor=white)
+![React](https://img.shields.io/badge/local%20UI-React-087EA4?logo=react&logoColor=white)
+![MIT license](https://img.shields.io/badge/license-MIT-24834b)
 
-[Quick start](#quick-start) · [Usage](#usage) · [Publishing](#publishing) · [Development](#development) · [Contributing](#contributing) · [License](#license)
+[Install](#install) &nbsp;·&nbsp; [How it works](#how-it-works) &nbsp;·&nbsp; [CLI](#cli) &nbsp;·&nbsp; [Demo site](#demo-site)
+
+</div>
+
+<p align="center"><img src="docs/screenshots/hero.png" width="820" alt="Git Larp's browser demo, with a fixed-seed example contribution calendar"></p>
+<p align="center"><img src="docs/screenshots/demo.png" width="820" alt="Interactive planner showing date controls, a contribution calendar, and the UTC timestamps for one day"></p>
+<p align="center"><sub>The screenshots show sample history computed from fixed dates and a fixed seed.</sub></p>
+
+---
+
+## About
+
+A contribution calendar looks simple until you start changing the dates, density and rhythm. Git Larp gives you a studio to plan synthetic histories for demos, fixtures and Git experiments. You can see what a date range will produce before touching the filesystem.
+
+The local web app keeps the plan you previewed and uses it to write a fresh repository of empty commits. The CLI uses the same planner for terminal previews and scripted generation.
 
 ## Features
 
-- **Live contribution preview** with total commits, active days, and peak daily activity.
-- **Date controls** with custom ranges and 90-day, 180-day, and last-year presets.
-- **Three activity patterns** with adjustable probability and daily commit ranges.
-- **Reshuffle** to explore another arrangement without changing your settings.
-- **Compact, responsive interface** with shadcn-style buttons, Radix sliders, and fixed-size calendar cells. Long timelines scroll horizontally.
-- **Local repository generation** with progress, cancellation, and protection against overwriting existing folders.
-- **Publishing instructions** with your exact local path, public/private selection, and a copyable GitHub CLI command.
-- **Shared generation engine** for the browser interface and CLI.
+- **Live contribution preview.** See a heatmap, total commits, active days and the busiest day.
+- **Custom dates and presets.** Start from 90 days, 180 days, the last year or a named activity recipe.
+- **Three activity patterns.** Adjust how likely a day is to receive commits and set the daily minimum and maximum.
+- **Reshuffle.** Try a new arrangement while keeping the same date and activity settings.
+- **Exact local generation.** Write the web preview's timestamps to a new repository, follow progress and cancel a running job.
+- **Folder protection.** The generator rejects existing output folders.
+- **Optional publishing.** Copy a GitHub CLI command for a public or private repository and run it from your own terminal.
+- **Shared planner.** The browser demo, local app and CLI use the same UTC planning logic.
 
-## Quick start
+## Install
 
-### Requirements
+You'll need Node.js **22.12 or newer** with npm, Git with support for `git init -b`, a modern browser and a writable project folder. Run `node --version`, `npm --version` and `git --version` to check.
 
-- **Node.js 22.12.0 or newer**, with npm.
-- **Git** available in your terminal. The generator uses `git init -b main`; use a Git version that supports it.
-- A modern desktop browser and a writable project directory.
+1. Clone the repository, or choose **Code → Download ZIP** on GitHub and extract it.
 
-Check your installation:
+   ```sh
+   git clone https://github.com/ztxv/fake-git-history.git
+   cd fake-git-history
+   ```
 
-```sh
-node --version
-npm --version
-git --version
-```
+2. Install the locked dependencies, build and start the local server.
 
-### Install and launch
+   ```sh
+   npm ci
+   npm start
+   ```
 
-Clone this repository, or choose **Code → Download ZIP** on GitHub and extract it. Open a terminal in the directory containing `package.json`, then run:
+3. Open [http://127.0.0.1:3000](http://127.0.0.1:3000). Keep the terminal open while using the app and press **Ctrl+C** to stop it.
 
-```sh
-npm ci
-npm start
-```
+On later launches, run `npm start` again. Installation needs internet access. Local previews and generation work offline after installation.
 
-Open **[http://127.0.0.1:3000](http://127.0.0.1:3000)** in your browser.
-
-`npm ci` installs the versions recorded in the lockfile. `npm start` builds the frontend and starts the local server. Keep that terminal running while using the app; press **Ctrl+C** to stop it. On subsequent launches, run `npm start` again.
-
-Dependency installation requires internet access. Previewing and generating repositories work offline afterward; publishing requires a connection to your Git host.
-
-### Use another port
-
-The default port is `3000`. To change it:
-
-**macOS / Linux / Git Bash**
-
-```sh
-PORT=3001 npm start
-```
-
-**Windows PowerShell**
-
-```powershell
-$env:PORT = "3001"
-npm start
-```
-
-Then visit `http://127.0.0.1:3001`. The server binds to the loopback interface, so it is accessible only from the computer running it.
+To change the port, use `PORT=3001 npm start` in macOS, Linux or Git Bash. In PowerShell, run `$env:PORT = "3001"` and then `npm start`. Open `http://127.0.0.1:3001` afterward.
 
 ## Usage
 
-1. **Choose your dates.** Set an inclusive start/end range or select a preset.
-2. **Select a pattern.** Choose Balanced, Work hours, or After hours.
-3. **Adjust activity.** Set the active-day probability and minimum/maximum commits per day. Use the number inputs for precise values up to 100.
-4. **Review the preview.** Inspect the heatmap and statistics. Hover over a cell for its date and count; cells also have keyboard focus and accessible labels. Use **Reshuffle** for another arrangement.
-5. **Set the author and folder.** The app reads your Git name and email when available; both are editable. Choose a new repository folder name.
-6. **Generate.** Click **Generate repository**, then follow progress or cancel. The completion screen shows the local path and publishing instructions.
+| Control | What it does |
+| --- | --- |
+| **Dates** | Choose the inclusive range or use a quick date preset. The recipe carousel also sets a pattern, probability and commit range. |
+| **Activity pattern** | **Balanced** (`uniform`) draws counts uniformly and favors daytime timestamps. **Work hours** (`workHours`) weights weekday counts and working hours. **After hours** (`afterWork`) weights weekends and evenings. All times use UTC. |
+| **Active-day probability** | Sets the chance that a day is selected. A skipped day has zero commits. A selected day can also have zero when the range includes zero. |
+| **Commits per day** | Set the allowed minimum and maximum with the sliders or number fields. |
+| **Preview and Reshuffle** | Hover over or focus a calendar cell to read its date and count. Long calendars scroll inside the preview. Reshuffle uses a new seed. |
+| **Author and folder** | Enter an author name and email. The web fields start blank. Choose a new output folder, then click **Generate repository**. |
 
-### Activity patterns
+The web app writes to `generated/<folder>/`. The repository has a `main` branch and empty commits named `Generated history`. Git records your supplied identity and the saved timestamps as both author and committer metadata. The working tree is empty and the result lives in `.git/`. The parent project ignores `generated/`.
 
-| Interface label | CLI value   | Behavior                                                                                                  |
-| --------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
-| Balanced        | `uniform`   | Uniform random daily counts within your range, with commit times weighted toward daytime hours.           |
-| Work hours      | `workHours` | Higher daily activity on weekdays, especially Tuesday–Thursday, with times weighted toward working hours. |
-| After hours     | `afterWork` | Higher daily activity on weekends, with times weighted toward evenings.                                   |
+### CLI
 
-Patterns are weighted distributions, not strict schedules. All dates and times use **UTC**.
+From the project root, preview a terminal graph:
 
-**Probability and daily counts are separate controls.** At 80%, each day has an 80% chance of being selected for activity. A selected day can still have zero commits if your minimum is zero. Days skipped by probability always have zero commits, even with a positive minimum.
-
-### What gets created
-
-The web app writes to `generated/<folder>` inside this project. For example:
-
-```text
-history-studio/
-└── generated/
-    └── my-history/
-        └── .git/
+```sh
+npm run cli -- --preview
+npm run cli -- --preview --startDate 2024/01/01 --endDate 2024/12/31 --frequency 70 --commitsPerDay "0,6" --distribution workHours
 ```
 
-Each result is an independent Git repository with:
+Omit `--preview` to write to `my-history/` in the current directory. The CLI reads `user.name` and `user.email` from Git config and picks a fresh seed on each run, so a separate generation can differ from the preview.
 
-- A `main` branch.
-- Empty commits with the message `Generated history`.
-- Required author and committer name/email fields that start blank and are set
-  only from your inputs.
-- Both author and committer timestamps set to the stored preview dates, in chronological order.
+| Option | Alias | Default |
+| --- | --- | --- |
+| `--preview` | `-p` | Off. Enable it for terminal output only. |
+| `--startDate` | `-s` | One year ago. Accepts `YYYY-MM-DD` or `YYYY/MM/DD`. |
+| `--endDate` | `-e` | Today. Uses the same formats as the start date. |
+| `--commitsPerDay` | `-c` | `0,4`. Each bound is an integer from 0 to 100. |
+| `--frequency` | `-f` | `80`. Valid range is 0 to 100. |
+| `--distribution` | `-d` | `uniform`. Also accepts `workHours` and `afterWork`. |
 
-An empty working directory is expected: the generated history lives in `.git`. The generator does not add sample files or copy this application's source into the result. Generated repositories are ignored by this project's `.gitignore`.
+## How it works
 
-Existing destination folders are rejected, never replaced. A handled failure or cancellation attempts to remove the newly created partial repository. An abrupt shutdown can leave a partial folder behind; inspect it and choose a new folder name before retrying.
+```text
+src/
+  planner-core.mjs         Shared validation, seeded activity, UTC timestamps
+  planner.js              Node Crypto adapter for the planner
+  server.js               Loopback HTTP API, retained previews and job state
+  repository.js           Git commits, identity, progress and cleanup
+  cli.js / index.js       Terminal flags and orchestration
+  visualization.js        Terminal contribution graph
+web/
+  main.jsx                React controls, heatmap and generation flow
+  style.css               Theme and responsive layout
+  publish-command.mjs     POSIX-quoted GitHub CLI command
+  components/             Recipes, publishing panel and local UI primitives
+demo-site/                Static demo with its own copy of the shared planner
+test/                     Planner, Git, HTTP, CLI and demo parity checks
+```
+
+1. **Plan.** The planner validates dates and weights the activity pattern using a seed.
+2. **Preview.** The local server stores the plan and returns a preview ID, daily counts and totals. The browser demo calculates and displays its plan directly in the tab.
+3. **Generate.** The local server looks up the stored preview ID and invokes Git with an argument array. The web UI polls for job progress.
 
 ## Publishing
 
-### Create a new GitHub repository
+After generation, the local app displays the path and a copyable command for a **new** GitHub repository. Choose **Public** (the default) or **Private**. Install GitHub CLI, run `gh auth login` once, then paste the command into Bash, Zsh or Git Bash. It creates the remote, sets `origin` and pushes. Select and copy the command manually if clipboard access fails. [GitHub CLI install](https://cli.github.com/) · [`gh repo create` reference](https://cli.github.com/manual/gh_repo_create)
 
-After generation, choose **Public** or **Private** in the completion panel and click **Copy command**. Public is the default. The command includes the actual path and uses the local folder name as the GitHub repository name:
-
-```sh
-cd '/path/to/history-studio/generated/my-history' && gh repo create 'my-history' --public --source=. --remote=origin --push
-```
-
-Install [GitHub CLI](https://cli.github.com/) and authenticate in your terminal once:
-
-```sh
-gh auth login
-```
-
-Then paste the copied command into **Bash, Zsh, or Git Bash**. It creates the remote repository, adds `origin`, and pushes the local history. Choose a name that does not already exist on your account; do not create the remote beforehand. Selecting Private changes the command to `--private`.
-
-The generated command uses POSIX shell quoting; it is not a PowerShell or Command Prompt command. GitHub authentication and publishing happen in your terminal—the website does not store GitHub credentials or run the command. See the [GitHub CLI reference](https://cli.github.com/manual/gh_repo_create) for command details.
-
-### Use an existing remote or another Git host
-
-Create an empty repository on your Git host, open a terminal in the generated local repository, and run the following commands. Replace `YOUR_REMOTE_URL` with its SSH or HTTPS URL:
+For another Git host or a remote you already created, open the terminal in the generated local repository and replace `YOUR_REMOTE_URL` with the URL of the empty remote:
 
 ```sh
 git remote add origin YOUR_REMOTE_URL
 git push -u origin main
 ```
 
-The preview represents commits in the generated repository. It does not fetch or combine your existing account activity. Contribution visibility on GitHub or GitLab depends on the host's rules, including account email, branch, and repository visibility; the local heatmap is not a guarantee of how your profile will appear.
+GitHub and GitLab apply their own rules for contribution visibility, including commit email, branch and repository visibility. The local preview shows only the generated plan.
 
-## CLI
+## Privacy and permissions
 
-From this project's root, preview activity without writing a repository:
+| Surface | What it accesses |
+| --- | --- |
+| **Browser demo** | Reads only the settings entered in the tab and computes a plan with Web Crypto. It uses no account, external API or Git credentials. |
+| **Local web app** | Listens on loopback, checks Host and Origin, and requires JSON for API writes. It uses the author details entered for generation and writes Git metadata under `generated/`. The server is intended for a single local user. |
+| **CLI** | Reads the configured Git name and email when generating and writes under the current directory. Preview mode only prints the graph. |
+| **Publishing** | Uses your Git host and terminal credentials on request. Pushing makes the commit metadata available according to the remote repository's visibility. |
 
-```sh
-npm run cli -- --preview
-```
+## Demo site
 
-Preview a custom range and pattern:
+[`demo-site/`](demo-site) is a plain HTML, CSS and JavaScript planner. Use the sample presets or enter your own dates, select a day to inspect its UTC timestamps, and reopen a plan with the same seed. Use the local app when you're ready to write a repository.
 
-```sh
-npm run cli -- --preview --startDate 2024/01/01 --endDate 2024/12/31 --frequency 70 --commitsPerDay "0,6" --distribution workHours
-```
+To deploy, drop the `demo-site` folder or a ZIP with `index.html` at its root onto [Vercel Drop](https://vercel.com/drop), choose a team and project name, then select **Deploy**.
 
-Remove `--preview` to generate a repository. CLI generation reads `user.name` and `user.email` from your Git configuration and writes to `my-history` in the current working directory, rather than `generated/`.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fztxv%2Ffake-git-history&root-directory=demo-site&project-name=git-larp&repository-name=git-larp)
 
-| Option            | Alias | Default      | Description                                                 |
-| ----------------- | ----- | ------------ | ----------------------------------------------------------- |
-| `--preview`       | `-p`  | `false`      | Render a terminal graph without creating a repository.      |
-| `--startDate`     | `-s`  | One year ago | First day, inclusive; `YYYY/MM/DD` or `YYYY-MM-DD`.         |
-| `--endDate`       | `-e`  | Today        | Last day, inclusive; same formats as the start date.        |
-| `--commitsPerDay` | `-c`  | `0,4`        | Ordered minimum and maximum, each an integer from 0 to 100. |
-| `--frequency`     | `-f`  | `80`         | Probability of selecting a day, from 0 to 100.              |
-| `--distribution`  | `-d`  | `uniform`    | `uniform`, `workHours`, or `afterWork`.                     |
+| Setting | Value |
+| --- | --- |
+| Root directory | `demo-site` on a branch containing the demo |
+| Framework preset | Other |
+| Build command | Enable override and leave blank |
+| Output directory | `.` if an override is needed |
+| Environment variables | None |
 
-Separate CLI invocations generate new random plans, so a CLI preview and a later generation can differ. The web interface retains its preview and generates those exact timestamps.
-
-## Limits and local state
-
-| Setting           | Current behavior                                                                    |
-| ----------------- | ----------------------------------------------------------------------------------- |
-| Date range        | 1–1,830 days inclusive, approximately five years.                                   |
-| Daily count       | 0–100 commits; minimum must not exceed maximum.                                     |
-| Plan size         | At most 25,000 commits. A zero-commit preview cannot be generated.                  |
-| Folder name       | 1–80 letters, numbers, hyphens, or underscores; must start with a letter or number. |
-| Generation        | One active job per server instance.                                                 |
-| Preview retention | Up to 20 previews in memory, each valid for 30 minutes.                             |
-| Job retention     | Up to 20 jobs in memory; not restored after a server restart.                       |
-
-Form values and the active job display are not persisted across page reloads. Closing or refreshing the browser does not cancel a running generation while the server remains running, but the refreshed page does not reconnect to that job. Use **Cancel** before leaving if you want generation to stop.
-
-The server serves the built frontend and a local JSON API. It checks Host/Origin headers and requires JSON for API writes. There is no user authentication or multi-user isolation; the app is intended for local use, not public hosting.
+Local preview and planner sync instructions are in [`demo-site/README.md`](demo-site/README.md). [Vercel build settings](https://vercel.com/docs/builds/configure-a-build)
 
 ## Development
 
-The frontend uses **React, Vite, Tailwind CSS, Radix primitives, and Lucide icons**. The backend uses **Node.js's built-in HTTP server** and invokes the installed Git executable. Backend modules use CommonJS; frontend modules use ES modules.
-
-After installing dependencies, start the API and frontend development servers
-together from the project root:
+Run the API and Vite together on ports `3000` and `5173`. Open [http://127.0.0.1:5173](http://127.0.0.1:5173) and restart the process after backend edits.
 
 ```sh
+npm ci
 npm run dev
 ```
 
-Open **http://127.0.0.1:5173**. The command starts the local API on port
-`3000` and Vite on port `5173`; both ports must be available. Restart the command
-after backend edits.
-
-A frontend build is not required when using Vite. To serve the production interface directly from the API server, run `npm run build` first, or use `npm start`.
-
-### Scripts
-
-| Command                    | Purpose                                                                               |
-| -------------------------- | ------------------------------------------------------------------------------------- |
-| `npm start`                | Build the frontend, then start the local server.                                      |
-| `npm run build`            | Produce the frontend bundle in `dist/`.                                               |
-| `npm run start:server`     | Start the API and serve any existing `dist/` build.                                   |
-| `npm run dev`              | Start the API on port 3000 and Vite on port 5173.                                     |
-| `npm run cli -- [options]` | Run the terminal interface.                                                           |
-| `npm test`                 | Run Node's built-in test suite.                                                       |
-| `npm run lint`             | Run Prettier **with writes** on `src/**/*.js`; this is not a full-project lint check. |
-
-### Project structure
-
-```text
-src/
-├── cli.js                    # CLI flags and entry point
-├── index.js                  # CLI orchestration
-├── planner.js                # Input validation and seeded activity planning
-├── repository.js             # Git execution, identity, progress, and cleanup
-├── server.js                 # Local HTTP API and static frontend serving
-└── visualization.js          # Terminal contribution graph
-web/
-├── main.jsx                  # Workspace, heatmap, form state, and job polling
-├── style.css                 # Theme, layout, and responsive styles
-├── publish-command.mjs       # Shell-quoted publishing command builder
-└── components/
-    ├── publish-instructions.jsx
-    └── ui/                   # Local Button and Slider primitives
-test/history.test.js         # Planner, Git, HTTP, CLI, and command tests
-index.html                   # Browser entry point
-vite.config.mjs              # Frontend build and development proxy
-```
-
-The planner creates a seeded list of timestamps. The API stores that plan and returns a preview ID with daily counts. Generation looks up the stored plan by ID, writes the commits, and exposes job status for the UI to poll. Git execution uses argument arrays rather than interpolated shell commands.
-
-To extend activity patterns, start in `src/planner.js` and update the available choices in `web/main.jsx` and `src/cli.js`. For interface changes, start in `web/`. Keep shared generation behavior in the backend so the web and CLI remain consistent.
-
-### Validation
+Use these checks on Linux, macOS or WSL. One test requires `/bin/sh` and a POSIX filename. CI runs the suite and frontend build on Ubuntu.
 
 ```sh
 npm test
 npm run build
 ```
 
-Tests cover reproducible plans, date and limit validation, actual Git timestamps and identity, existing-folder protection, cancellation cleanup, the HTTP generation flow, UTC rendering in the CLI, and shell quoting in publishing commands. They create temporary repositories and a temporary loopback server; they do not publish to GitHub.
+The suite exercises planner validation, equality between Node and Web Crypto, copy drift, real Git timestamps and identity, cancellation, existing folders, HTTP generation, UTC CLI output and shell quoting. Tests use temporary repositories and a loopback server.
 
-The full suite currently requires `/bin/sh`, and one test uses filenames that are not valid on native Windows. Run it on macOS, Linux, or inside WSL. Automated browser interaction and visual regression tests are not included.
+- `npm run start:server` serves an existing `dist/` build. Use `npm start` or rebuild if the page reports missing files or frontend edits are stale.
+- If an API request fails under Vite, check that both development ports are available. If a production port is busy, set `PORT` and restart.
+- If Generate is unavailable, wait for the preview, check that Git is installed and confirm the plan contains commits. Reshuffle or change a setting to refresh an expired preview. If CLI generation cannot read an identity, set Git's `user.name` and `user.email`.
+- `npm run lint` runs Prettier with writes on `src/**/*.js`.
 
-## Troubleshooting
+<details>
+<summary><b>Known limits</b></summary>
 
-| Problem                                 | What to check                                                                                   |
-| --------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `node`, `npm`, or `git` is not found    | Install the missing tool, confirm it is on your PATH, then reopen the terminal.                 |
-| The port is busy                        | Stop the process using it or choose another production port with `PORT`.                        |
-| The page reports missing frontend files | Run `npm start`, or run `npm run build` before `npm run start:server`.                          |
-| Frontend changes are not visible        | Use Vite during development, or rebuild and refresh the production page.                        |
-| Vite loads but API requests fail        | Stop the process, confirm ports 3000 and 5173 are free, then run `npm run dev` again.            |
-| The destination folder already exists   | Choose a different folder name; existing folders are preserved.                                 |
-| The preview expired                     | Reshuffle or change a setting to request a fresh preview, then review it before generating.     |
-| Generate is disabled                    | Wait for the preview, check that Git is available, and ensure the plan has at least one commit. |
-| CLI generation cannot read an identity  | Configure Git's `user.name` and `user.email`, or enter them directly in the web app.            |
-| Copying fails                           | Select the displayed path or command and copy it manually.                                      |
+- Inclusive date ranges run from 1 to 1,830 days. Plans can contain at most 25,000 commits. A plan with zero commits can be previewed.
+- Folder names must start with a letter or number and contain 1–80 letters, numbers, hyphens or underscores. Choose a new name if a folder already exists. Cancellation and handled failures attempt to remove only the newly created partial repository. Abrupt shutdown can leave that partial folder behind.
+- The local server runs one generation at a time and retains up to 20 previews (valid for 30 minutes) and 20 jobs in memory. Reloading clears the displayed form and job state. Use **Cancel** before leaving if you want to stop a running job.
+- The local server has no authentication or multi-user isolation. Deploy the static demo folder for public use.
 
-## Contributing
+</details>
 
-Forks, fixes, and new ideas are welcome. Open an issue to describe a bug or propose a feature; for larger changes, explain the intended behavior before starting implementation.
+### Contributing
 
-To contribute:
-
-1. Fork this repository and create a branch for your change.
-2. Follow the development setup above.
-3. Keep changes focused and add regression coverage for behavior changes.
-4. Run the test suite and production build. For UI changes, also check short and long date ranges, narrow screens, and keyboard controls.
-5. Open a pull request describing the problem, the change, and how you verified it. Include screenshots for visual changes.
-
-Commit lockfile changes when adding dependencies. Keep generated repositories, build output, and credentials out of pull requests. Preserve the local workflow and make any publishing action explicit.
+Open an issue first for substantial changes. Keep patches focused, run the tests and build, and include screenshots for UI changes. For new patterns, update `src/planner-core.mjs`, sync the demo copy and update the web and CLI choices. Track lockfile changes when dependencies change. Keep generated repositories, build output and credentials out of contributions.
 
 ## Credits
 
-Built on [artiebits/fake-git-history](https://github.com/artiebits/fake-git-history), originally created by Artur Khusaenov. Pretty cool guy and he has a ton of projects that are neat, he is also an ex Meta and current bookings.com software dev which is pretty cool. The web interface uses local shadcn-style components composed from Radix primitives and Tailwind CSS. AI was used in some parts of making this project.
+Git Larp builds on [Artur Khusaenov's Fake Git History](https://github.com/artiebits/fake-git-history). The local app uses React, Vite, Tailwind CSS, Radix, Lucide and shadcn-style components. AI assisted with parts of the project.
 
 ## License
 
-[MIT](LICENSE). You can use, modify, and redistribute the project, including for commercial use, under the terms in `LICENSE`. Retain the copyright and license notice when distributing copies or substantial portions of the software.
+[MIT](LICENSE). Keep the copyright and license notice when redistributing copies or substantial portions of the project.
+
+## Disclaimer
+
+Git Larp generates synthetic activity for testing and demonstrations. It is independent of GitHub and GitLab.
+
+<div align="center">
+<sub>Built by <a href="https://github.com/ztxv">@ztxv</a>.</sub>
+</div>
