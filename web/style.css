@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@source not "../demo-site";
+@source not "../docs";
 @theme inline {
   --color-background: #111414;
   --color-primary: #a5edb5;

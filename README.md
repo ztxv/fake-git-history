@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="demo-site/assets/git-larp.svg" width="72" height="72" alt="Git Larp logo">
+<img src="docs/git-larp.svg" width="72" height="72" alt="Git Larp logo">
 
 # Git Larp
 
@@ -14,13 +14,11 @@ Fake Git History turns dates and activity settings into a contribution calendar.
 ![React](https://img.shields.io/badge/local%20UI-React-087EA4?logo=react&logoColor=white)
 ![MIT license](https://img.shields.io/badge/license-MIT-24834b)
 
-[Install](#install) &nbsp;·&nbsp; [How it works](#how-it-works) &nbsp;·&nbsp; [CLI](#cli) &nbsp;·&nbsp; [Demo site](#demo-site)
+[Install](#install) &nbsp;·&nbsp; [How it works](#how-it-works) &nbsp;·&nbsp; [CLI](#cli) &nbsp;·&nbsp; [Hosted demo](#hosted-demo)
 
 </div>
 
-<p align="center"><img src="docs/screenshots/hero.png" width="820" alt="Git Larp's browser demo, with a fixed-seed example contribution calendar"></p>
-<p align="center"><img src="docs/screenshots/demo.png" width="820" alt="Interactive planner showing date controls, a contribution calendar, and the UTC timestamps for one day"></p>
-<p align="center"><sub>The screenshots show sample history computed from fixed dates and a fixed seed.</sub></p>
+<p align="center"><img src="docs/screenshots/hero.png" width="820" alt="The Git Larp local app, with history recipes, activity controls, a contribution preview and the repository output form"></p>
 
 ---
 
@@ -39,7 +37,7 @@ The local web app keeps the plan you previewed and uses it to write a fresh repo
 - **Exact local generation.** Write the web preview's timestamps to a new repository, follow progress and cancel a running job.
 - **Folder protection.** The generator rejects existing output folders.
 - **Optional publishing.** Copy a GitHub CLI command for a public or private repository and run it from your own terminal.
-- **Shared planner.** The browser demo, local app and CLI use the same UTC planning logic.
+- **Shared planner.** The hosted demo, local app and CLI use the same UTC planning logic.
 
 ## Install
 
@@ -102,7 +100,7 @@ Omit `--preview` to write to `my-history/` in the current directory. The CLI rea
 
 ```text
 src/
-  planner-core.mjs         Shared validation, seeded activity, UTC timestamps
+  planner-core.mjs         Shared validation, seeded activity, UTC timestamps (also used by the hosted demo)
   planner.js              Node Crypto adapter for the planner
   server.js               Loopback HTTP API, retained previews and job state
   repository.js           Git commits, identity, progress and cleanup
@@ -110,15 +108,15 @@ src/
   visualization.js        Terminal contribution graph
 web/
   main.jsx                React controls, heatmap and generation flow
+  demo.mjs                Hosted-demo stand-in for the local API (demo build only)
   style.css               Theme and responsive layout
   publish-command.mjs     POSIX-quoted GitHub CLI command
   components/             Recipes, publishing panel and local UI primitives
-demo-site/                Static demo with its own copy of the shared planner
-test/                     Planner, Git, HTTP, CLI and demo parity checks
+test/                     Planner, Git, HTTP, CLI and hosted-demo checks
 ```
 
 1. **Plan.** The planner validates dates and weights the activity pattern using a seed.
-2. **Preview.** The local server stores the plan and returns a preview ID, daily counts and totals. The browser demo calculates and displays its plan directly in the tab.
+2. **Preview.** The local server stores the plan and returns a preview ID, daily counts and totals. The hosted demo answers the same calls inside the browser tab instead.
 3. **Generate.** The local server looks up the stored preview ID and invokes Git with an argument array. The web UI polls for job progress.
 
 ## Publishing
@@ -138,28 +136,36 @@ GitHub and GitLab apply their own rules for contribution visibility, including c
 
 | Surface | What it accesses |
 | --- | --- |
-| **Browser demo** | Reads only the settings entered in the tab and computes a plan with Web Crypto. It uses no account, external API or Git credentials. |
+| **Hosted demo** | Runs the same interface with the local API replaced by an in-browser simulation. It reads only the settings entered in the tab, computes plans with Web Crypto and sends no requests to a backend. It saves nothing and creates no repository. It uses no account or Git credentials. |
 | **Local web app** | Listens on loopback, checks Host and Origin, and requires JSON for API writes. It uses the author details entered for generation and writes Git metadata under `generated/`. The server is intended for a single local user. |
 | **CLI** | Reads the configured Git name and email when generating and writes under the current directory. Preview mode only prints the graph. |
 | **Publishing** | Uses your Git host and terminal credentials on request. Pushing makes the commit metadata available according to the remote repository's visibility. |
 
-## Demo site
+## Hosted demo
 
-[`demo-site/`](demo-site) is a plain HTML, CSS and JavaScript planner. Use the sample presets or enter your own dates, select a day to inspect its UTC timestamps, and reopen a plan with the same seed. Use the local app when you're ready to write a repository.
+The same interface can be built as a static site that needs no server, for hosts like Vercel. The local API is replaced by an in-browser simulation in [`web/demo.mjs`](web/demo.mjs). Plans come from the real planner, so previews match the local app. Nothing is saved, and **Generate repository** plays a progress run (with working **Cancel**) but creates no repository and runs no Git.
 
-To deploy, drop the `demo-site` folder or a ZIP with `index.html` at its root onto [Vercel Drop](https://vercel.com/drop), choose a team and project name, then select **Deploy**.
+```sh
+npm run dev:demo     # try it at http://127.0.0.1:5173
+npm run build:demo   # static site in dist/
+```
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fztxv%2Ffake-git-history&root-directory=demo-site&project-name=git-larp&repository-name=git-larp)
+The flag is `VITE_DEMO=true`, set by `.env.demo` for `--mode demo`. Vite replaces it at build time, so `npm run build` and `npm start` contain none of the demo code.
+
+To deploy on Vercel, import the repository. [`vercel.json`](vercel.json) sets the install command, build command and output directory.
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fztxv%2Ffake-git-history&project-name=git-larp&repository-name=git-larp)
 
 | Setting | Value |
 | --- | --- |
-| Root directory | `demo-site` on a branch containing the demo |
-| Framework preset | Other |
-| Build command | Enable override and leave blank |
-| Output directory | `.` if an override is needed |
+| Root directory | Repository root (leave blank) |
+| Framework preset | Vite |
+| Install command | `npm ci` |
+| Build command | `npm run build:demo` |
+| Output directory | `dist` |
 | Environment variables | None |
 
-Local preview and planner sync instructions are in [`demo-site/README.md`](demo-site/README.md). [Vercel build settings](https://vercel.com/docs/builds/configure-a-build)
+[Vercel build settings](https://vercel.com/docs/builds/configure-a-build)
 
 ## Development
 
@@ -177,7 +183,7 @@ npm test
 npm run build
 ```
 
-The suite exercises planner validation, equality between Node and Web Crypto, copy drift, real Git timestamps and identity, cancellation, existing folders, HTTP generation, UTC CLI output and shell quoting. Tests use temporary repositories and a loopback server.
+The suite exercises planner validation, equality between Node and Web Crypto planning in the hosted demo, its simulated generate and cancel flow, real Git timestamps and identity, cancellation, existing folders, HTTP generation, UTC CLI output and shell quoting. Tests use temporary repositories and a loopback server.
 
 - `npm run start:server` serves an existing `dist/` build. Use `npm start` or rebuild if the page reports missing files or frontend edits are stale.
 - If an API request fails under Vite, check that both development ports are available. If a production port is busy, set `PORT` and restart.
@@ -190,13 +196,13 @@ The suite exercises planner validation, equality between Node and Web Crypto, co
 - Inclusive date ranges run from 1 to 1,830 days. Plans can contain at most 25,000 commits. A plan with zero commits can be previewed.
 - Folder names must start with a letter or number and contain 1–80 letters, numbers, hyphens or underscores. Choose a new name if a folder already exists. Cancellation and handled failures attempt to remove only the newly created partial repository. Abrupt shutdown can leave that partial folder behind.
 - The local server runs one generation at a time and retains up to 20 previews (valid for 30 minutes) and 20 jobs in memory. Reloading clears the displayed form and job state. Use **Cancel** before leaving if you want to stop a running job.
-- The local server has no authentication or multi-user isolation. Deploy the static demo folder for public use.
+- The local server has no authentication or multi-user isolation. To share a preview publicly, use the hosted demo build instead of exposing this server.
 
 </details>
 
 ### Contributing
 
-Open an issue first for substantial changes. Keep patches focused, run the tests and build, and include screenshots for UI changes. For new patterns, update `src/planner-core.mjs`, sync the demo copy and update the web and CLI choices. Track lockfile changes when dependencies change. Keep generated repositories, build output and credentials out of contributions.
+Open an issue first for substantial changes. Keep patches focused, run the tests and build, and include screenshots for UI changes. For new patterns, update `src/planner-core.mjs` and the web and CLI choices. The hosted demo imports the planner directly. Track lockfile changes when dependencies change. Keep generated repositories, build output and credentials out of contributions.
 
 ## Credits
 

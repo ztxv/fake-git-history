@@ -21,6 +21,8 @@
     "cli": "node src/cli.js",
     "dev": "node src/dev.js",
     "build": "vite build",
+    "build:demo": "vite build --mode demo",
+    "dev:demo": "vite --mode demo",
     "test": "node --test"
   },
   "husky": {

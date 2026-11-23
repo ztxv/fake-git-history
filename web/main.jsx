@@ -22,6 +22,11 @@ import { Slider } from "./components/ui/slider";
 import { HistoryPresetCarousel } from "./components/history-preset-carousel";
 import "./style.css";
 import { PublishInstructions } from "./components/publish-instructions";
+import { DemoBanner } from "./components/demo-banner";
+// Hosted demo build (`npm run build:demo`): same UI, but the server is
+// simulated in the browser and nothing is persisted. Statically replaced by
+// Vite, so the normal build drops all demo code.
+const DEMO = import.meta.env.VITE_DEMO === "true";
 const key = d => d.toISOString().slice(0, 10);
 const today = new Date();
 const yearAgo = new Date(today);
@@ -55,6 +60,7 @@ const patterns = [
   }
 ];
 async function api(url, body) {
+  if (DEMO) return (await import("./demo.mjs")).demoApi(url, body);
   const response = await fetch(
     url,
     body === undefined
@@ -139,8 +145,8 @@ function App() {
     [error, setError] = useState(""),
     [config, setConfig] = useState(null),
     [identity, setIdentity] = useState({
-      name: "",
-      email: "",
+      name: DEMO ? "Ada Lovelace" : "",
+      email: DEMO ? "ada@example.com" : "",
       folder: "my-history"
     }),
     [job, setJob] = useState(null),
@@ -283,6 +289,7 @@ function App() {
   }
   return (
     <>
+      {DEMO && <DemoBanner />}
       <header>
         <div className="brand">
           <span className="brand-icon">
@@ -291,11 +298,11 @@ function App() {
           <span>
             git<span className="muted">larp</span>
           </span>
-          <span className="version">LOCAL</span>
+          <span className="version">{DEMO ? "DEMO" : "LOCAL"}</span>
         </div>
         <div className="header-right">
           <span className="local-status">
-            <i /> Running on your machine
+            <i /> {DEMO ? "Simulated in this demo" : "Running on your machine"}
           </span>
           <a
             className="source-code-link"
@@ -316,7 +323,7 @@ function App() {
             <p>Shape your activity. Preview every commit. Generate locally.</p>
           </div>
           <span className="workspace-tag">
-            <Monitor size={15} /> Local workspace
+            <Monitor size={15} /> {DEMO ? "Demo workspace" : "Local workspace"}
           </span>
         </div>
         <section className="preset-section" aria-labelledby="preset-heading">
@@ -697,6 +704,13 @@ function App() {
                 {job.error && <p>{job.error}</p>}
                 {job.path && (
                   <>
+                    {DEMO && (
+                      <p className="demo-note">
+                        This is a demo, so no repository was created. Run Git
+                        Larp locally to generate the real thing, then use the
+                        command below to push it.
+                      </p>
+                    )}
                     <div className="completed-path">
                       <code>{job.path}</code>
                       <Button
@@ -718,8 +732,9 @@ function App() {
               <div>
                 <strong>Made here. Stays here.</strong>
                 <p>
-                  Everything runs on your computer. Nothing is uploaded or
-                  pushed automatically.
+                  {DEMO
+                    ? "This demo runs in your browser. Nothing is uploaded, saved or pushed."
+                    : "Everything runs on your computer. Nothing is uploaded or pushed automatically."}
                 </p>
               </div>
             </div>
