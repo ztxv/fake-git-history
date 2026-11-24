@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Git Larp">
+  <rect x="1" y="1" width="62" height="62" rx="15" fill="#203428" stroke="#355540" stroke-width="2"/>
+  <g fill="none" stroke="#a5edb5" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 43H49"/>
+    <path d="M31 43C43 43 49 36 49 20"/>
+  </g>
+  <g fill="#a5edb5">
+    <circle cx="14" cy="43" r="7"/>
+    <circle cx="31" cy="43" r="7"/>
+    <circle cx="49" cy="43" r="7"/>
+    <circle cx="49" cy="19" r="7"/>
+  </g>
+</svg>
