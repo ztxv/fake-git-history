@@ -1,0 +1,19 @@
+<!-- Source for public/apple-touch-icon.png, icon-192.png and icon-512.png: the favicon mark on a
+     full-bleed square (no rounded corners, no transparency; iOS and Android apply their own mask).
+     The mark is scaled to 0.84 so it stays inside the maskable safe zone. Render each size with
+     Playwright (page.screenshot of an <img> of this file) at 180, 192 and 512 px. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" fill="#203428"/>
+  <g transform="translate(32 32) scale(0.84) translate(-31.5 -31)">
+    <g fill="none" stroke="#a5edb5" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 43H49"/>
+      <path d="M31 43C43 43 49 36 49 20"/>
+    </g>
+    <g fill="#a5edb5">
+      <circle cx="14" cy="43" r="7"/>
+      <circle cx="31" cy="43" r="7"/>
+      <circle cx="49" cy="43" r="7"/>
+      <circle cx="49" cy="19" r="7"/>
+    </g>
+  </g>
+</svg>

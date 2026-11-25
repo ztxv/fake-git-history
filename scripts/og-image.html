@@ -1,0 +1,124 @@
+<!doctype html>
+<!--
+  Source for public/og-image.png: the link-preview card shown when the site's URL is pasted
+  into iMessage, Slack, Discord, X or LinkedIn.
+
+  Render at exactly 1200x630 (Playwright is enough; fonts load from ./fonts, no network needed):
+
+    const { chromium } = require('playwright');
+    const browser = await chromium.launch();
+    const page = await browser.newPage({ viewport: { width: 1200, height: 630 }, deviceScaleFactor: 1 });
+    await page.goto('file:///ABSOLUTE/PATH/TO/scripts/og-image.html');
+    await page.evaluate(() => document.fonts.ready);
+    await page.screenshot({ path: 'public/og-image.png' });
+    await browser.close();
+
+  Then check the result is 1200x630 and well under 600 KB.
+
+  Colors are the app's own tokens from web/style.css. The mark is public/favicon.svg.
+  The heatmap levels below are real planner output (src/planner-core.mjs: 2026-07-12 to
+  2026-11-14, 0-4 commits/day, 80% active days, seed "hello-history"); the recipe card copy
+  is from web/data/history-presets.ts. No numbers or results are shown on the card.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<style>
+  @font-face { font-family: 'Inter'; src: url('fonts/inter-400.woff2') format('woff2'); font-weight: 400; }
+  @font-face { font-family: 'Inter'; src: url('fonts/inter-600.woff2') format('woff2'); font-weight: 600; }
+  @font-face { font-family: 'Inter'; src: url('fonts/inter-700.woff2') format('woff2'); font-weight: 700; }
+  @font-face { font-family: 'Inter'; src: url('fonts/inter-800.woff2') format('woff2'); font-weight: 800; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    font-family: 'Inter', sans-serif; color: #e8ece9; position: relative;
+    background:
+      radial-gradient(760px 430px at 100% 0%, rgba(74, 130, 92, 0.34), transparent 70%),
+      radial-gradient(640px 380px at 0% 100%, rgba(42, 74, 52, 0.30), transparent 70%),
+      #0c0f0e;
+  }
+
+  /* Left column: brand, headline, subline, chips. Margins are 64px. */
+  .left { position: absolute; left: 64px; top: 64px; width: 600px; height: 502px; display: flex; flex-direction: column; }
+  .brand { display: flex; align-items: center; gap: 18px; }
+  .brand svg { width: 72px; height: 72px; flex: none; }
+  .brand b { font-weight: 700; font-size: 44px; letter-spacing: -0.04em; }
+  .brand b span { color: #87968d; font-weight: 400; }
+  .live { margin-left: 6px; display: inline-flex; align-items: center; gap: 9px; font-weight: 700; font-size: 16px; letter-spacing: 0.14em; color: #a5edb5; border: 1px solid #355540; background: #142019; border-radius: 999px; padding: 7px 15px; }
+  .live i { width: 7px; height: 7px; border-radius: 50%; background: #a5edb5; }
+  h1 { font-weight: 800; font-size: 72px; line-height: 1.05; letter-spacing: -0.045em; margin-top: 50px; white-space: nowrap; }
+  h1 span { color: #a5edb5; }
+  p.sub { margin-top: 24px; font-size: 26px; line-height: 1.42; color: #b3bfb7; max-width: 560px; }
+  .foot { margin-top: auto; display: flex; align-items: center; gap: 12px; }
+  .chip { font-weight: 600; font-size: 19px; padding: 9px 17px; border-radius: 999px; white-space: nowrap; }
+  .c1 { background: #1f3a2b; color: #a5edb5; } .c2 { background: #1a3a37; color: #8fe3d3; }
+  .c3 { background: #26332b; color: #cfe3d4; } .c4 { background: #2b332e; color: #bcc7c0; }
+
+  /* Right: tilted product motif built from the app's own panels. Panels overlap only blank space. */
+  .stage { position: absolute; left: 706px; top: 72px; width: 430px; height: 486px; }
+  .panel { position: absolute; background: #111613; border: 1px solid #2f3a33; border-radius: 18px; box-shadow: 0 34px 70px rgba(0, 0, 0, 0.55), 0 8px 18px rgba(0, 0, 0, 0.35); }
+  .recipe { width: 318px; height: 150px; right: 10px; top: 8px; transform: rotate(5deg); padding: 20px 22px; background: linear-gradient(145deg, #1a251d, #111713 72%); border-color: #3a4a40; }
+  .recipe .top { display: flex; justify-content: space-between; font-weight: 700; font-size: 13px; letter-spacing: 0.12em; color: #8ea497; }
+  .recipe .top span:first-child { color: #a5edb5; }
+  .recipe h3 { font-weight: 600; font-size: 25px; letter-spacing: -0.02em; margin-top: 12px; color: #edf4ef; }
+
+  .preview { width: 352px; height: 252px; left: 0; top: 126px; transform: rotate(-3deg); padding: 20px 22px; background: radial-gradient(at 100% 0, rgba(26, 42, 31, 0.9), transparent 65%), #111613; border-color: #3f5046; }
+  .preview .head { display: flex; justify-content: space-between; align-items: center; }
+  .preview .head b { font-weight: 600; font-size: 19px; letter-spacing: -0.01em; }
+  .badge { font-weight: 600; font-size: 13px; color: #9dccaa; background: #24362a; border-radius: 5px; padding: 5px 9px; }
+  .heat { margin-top: 18px; display: grid; grid-template-rows: repeat(7, 14px); grid-template-columns: repeat(18, 14px); grid-auto-flow: column; gap: 3px; }
+  .heat i { display: block; border-radius: 3px; }
+  .l0 { background: #232f27; } .l1 { background: #2e593c; } .l2 { background: #458458; } .l3 { background: #76b785; } .l4 { background: #b2f1bd; }
+  .legend { margin-top: 14px; display: flex; justify-content: flex-end; align-items: center; gap: 5px; font-weight: 400; font-size: 13px; color: #82938a; }
+  .legend i { width: 12px; height: 12px; border-radius: 3px; display: block; }
+  .legend span { margin: 0 3px; }
+
+  .gen { left: 6px; top: 414px; transform: rotate(-3deg); background: #a5edb5; border: 0; color: #122719; border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 18px; white-space: nowrap; box-shadow: 0 18px 36px rgba(0, 0, 0, 0.5), 0 0 0 5px rgba(165, 237, 181, 0.14); }
+  .gen svg { width: 21px; height: 21px; flex: none; }
+  .job { right: 8px; top: 400px; transform: rotate(3deg); padding: 13px 15px 15px; background: #111613; border-color: #51775a; border-radius: 14px; white-space: nowrap; }
+  .job strong { font-weight: 600; font-size: 14px; color: #e8ece9; }
+  .job .track { margin-top: 10px; width: 128px; height: 8px; border-radius: 4px; background: #28382d; overflow: hidden; }
+  .job .track i { display: block; width: 62%; height: 100%; border-radius: 4px; background: #a5edb5; }
+</style>
+</head>
+<body>
+  <div class="left">
+    <div class="brand">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="1" y="1" width="62" height="62" rx="15" fill="#203428" stroke="#355540" stroke-width="2"/><g fill="none" stroke="#a5edb5" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 43H49"/><path d="M31 43C43 43 49 36 49 20"/></g><g fill="#a5edb5"><circle cx="14" cy="43" r="7"/><circle cx="31" cy="43" r="7"/><circle cx="49" cy="43" r="7"/><circle cx="49" cy="19" r="7"/></g></svg>
+      <b>git<span>larp</span></b>
+      <span class="live"><i></i>LIVE DEMO</span>
+    </div>
+    <h1>Design the graph.<br /><span>Generate locally.</span></h1>
+    <p class="sub">Preview every commit on a contribution calendar, then write it to a real Git repository on your own machine.</p>
+    <div class="foot">
+      <span class="chip c1">Live preview</span><span class="chip c2">3 patterns</span><span class="chip c3">Reshuffle</span><span class="chip c4">Local Git</span>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="panel recipe">
+      <div class="top"><span>BALANCED</span><span>365 DAYS</span></div>
+      <h3>The steady hand</h3>
+    </div>
+    <div class="panel preview">
+      <div class="head"><b>Contribution preview</b><span class="badge">Live preview</span></div>
+      <div class="heat" id="heat"></div>
+      <div class="legend">Less <span></span><i class="l0"></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i><span></span> More</div>
+    </div>
+    <div class="panel gen">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
+      Generate repository
+    </div>
+    <div class="panel job">
+      <strong>Writing your history</strong>
+      <div class="track"><i></i></div>
+    </div>
+  </div>
+
+  <script>
+    // Real planner output (see the comment at the top), one digit per day, column-major like the app.
+    const levels = '142231020440232010003200000341432203323220231430121033000440441001313002403100300200001303311430313200044440201000110333241020';
+    document.getElementById('heat').innerHTML = [...levels].map(n => '<i class="l' + n + '"></i>').join('');
+  </script>
+</body>
+</html>
