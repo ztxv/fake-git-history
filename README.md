@@ -167,6 +167,15 @@ To deploy on Vercel, import the repository. [`vercel.json`](vercel.json) sets th
 
 [Vercel build settings](https://vercel.com/docs/builds/configure-a-build)
 
+### Link previews
+
+Pasting the hosted demo's URL into iMessage, Slack, Discord, X or LinkedIn shows a branded card (`public/og-image.png`, 1200×630). The tags are plain HTML in the `<head>` of [`index.html`](index.html), so crawlers see them without running JavaScript. The web app manifest is [`public/manifest.webmanifest`](public/manifest.webmanifest), and the icons are in [`public/`](public).
+
+- **Absolute URLs.** `og:url`, `og:image`, `twitter:image` and the canonical link use `https://git-larp.vercel.app`, because relative URLs fail in iMessage. If you deploy under a different domain, update those four in `index.html`.
+- **Re-render the card.** Its source is [`scripts/og-image.html`](scripts/og-image.html); the comment at the top has the Playwright snippet. Fonts are the subset Inter files in [`scripts/fonts/`](scripts/fonts) (SIL Open Font License, included), so it renders the same on any machine. Keep the output at 1200×630 and well under 600 KB.
+- **Re-render the app icons.** [`scripts/app-icon.svg`](scripts/app-icon.svg) is the source for `apple-touch-icon.png` (180), `icon-192.png` and `icon-512.png`. `favicon.svg` is the mark itself.
+- **Caching.** Apps cache previews per URL. After a redeploy, send the link with a throwaway query string such as `?v=2` to see the new card right away. Slack, Discord, X and LinkedIn also have link-preview debuggers or refresh tools.
+
 ## Development
 
 Run the API and Vite together on ports `3000` and `5173`. Open [http://127.0.0.1:5173](http://127.0.0.1:5173) and restart the process after backend edits.
